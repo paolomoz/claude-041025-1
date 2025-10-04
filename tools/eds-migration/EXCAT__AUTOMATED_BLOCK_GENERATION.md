@@ -28,6 +28,61 @@ This document describes the automated workflow for generating EDS blocks from ex
 
 ---
 
+### Step 1.5: Visual Layout Analysis (CRITICAL)
+
+**Objective:** Explicitly analyze and document the visual layout BEFORE writing any code.
+
+**MANDATORY for all blocks with repeating items (cards, logos, grids, carousels):**
+
+**Actions:**
+1. **Count items per row** in the screenshot:
+   - Example: "5 logos in first row, 4 logos in second row"
+   - NOT: "approximately 5 items per row"
+   - Count EXACTLY
+
+2. **Identify layout type:**
+   - Fixed grid (e.g., always 3 columns)
+   - Flexible wrapping (e.g., 5/4 split based on available space)
+   - Carousel/slider (items slide, don't wrap)
+
+3. **Document dimensions:**
+   - Approximate item width
+   - Gaps between items (horizontal and vertical)
+   - Container padding
+
+4. **Note special patterns:**
+   - Do items have equal width?
+   - Do some items span multiple columns?
+   - Is there a pattern to the wrapping (e.g., always 5 then 4)?
+
+5. **Record findings:**
+   ```markdown
+   ## Block: cards-logos-v2
+
+   **Visual Layout Analysis:**
+   - Total items: 9 logos
+   - Layout pattern: 5 items first row, 4 items second row (5/4 split)
+   - Layout type: Flexible wrapping (not fixed grid)
+   - Approximate item width: ~160px
+   - Horizontal gap: ~60px
+   - Vertical gap: ~40px
+   - Container: Full width with center alignment
+   ```
+
+**Why this matters:**
+- Prevents implementing wrong layout (e.g., fixed 3-column grid instead of flexible 5/4 wrap)
+- Provides reference for verification later
+- Forces careful observation before coding
+
+**Common mistake:** Looking at screenshot, thinking "looks like 3 columns", implementing `grid-template-columns: repeat(3, 1fr)` without counting actual items.
+
+**Output:**
+- Written layout analysis document
+- Item count per row documented
+- Layout pattern identified
+
+---
+
 ### Step 2: Content Classification
 
 **Objective:** Distinguish between free content and structured blocks.
@@ -155,8 +210,42 @@ export default function decorate(block) {
 - Each block gets its own standalone CSS file
 - No @import or inheritance from base blocks
 - Apply design tokens from `styles/design-tokens.css`
-- Match visual design from screenshot exactly
+- Match visual design from screenshot exactly (use Visual Layout Analysis from Step 1.5)
 - Use design system colors, typography, spacing
+
+**Critical CSS Considerations:**
+
+1. **Box Model - Always specify box-sizing:**
+   ```css
+   .block-name > ul > li {
+     box-sizing: border-box; /* Include padding/border in width calculation */
+     width: 15.2%;
+     padding: 20px;
+   }
+   ```
+
+   **Why:** Without `box-sizing: border-box`, padding is added OUTSIDE the width:
+   - `width: 15.2%` = 160px
+   - `padding: 20px` × 2 = 40px
+   - **Actual width = 200px** (too wide!)
+
+   With `box-sizing: border-box`:
+   - `width: 15.2%` = 160px **INCLUDING padding**
+   - **Actual width = 160px** ✅
+
+2. **Flexbox for flexible wrapping:**
+   - Use when item count per row should adapt (e.g., 5/4 split)
+   - Set `flex: 0 1 auto` to allow slight shrinking
+   - Set percentage width as target, min/max as constraints
+
+3. **Grid for fixed columns:**
+   - Use when layout is always the same (e.g., always 3 columns)
+   - `grid-template-columns: repeat(3, 1fr)`
+
+4. **Reference your Visual Layout Analysis:**
+   - If analysis says "5/4 flexible split" → use flexbox
+   - If analysis says "always 3 columns" → use grid
+   - **Don't guess - use the documented pattern**
 
 **Example Structure:**
 ```css
@@ -316,9 +405,54 @@ Contact us today to get started.
 **Critical Importance:** This step is **mandatory** and cannot be skipped. Visual inspection of screenshots alone is insufficient - you must test with the actual content rendered in EDS.
 
 **Prerequisites:**
+
 1. **Test page with exact content** - Create a test page in EDS with the same number of items, same text, same images as the original
+
 2. **Local EDS server running** - `npx @adobe/aem-cli up --no-open`
+
 3. **Original screenshot for comparison** - Side-by-side reference
+
+**Proper Test Environment Setup (CRITICAL):**
+
+EDS blocks require proper page rendering to execute their JavaScript decoration logic. Testing on the wrong type of page will give false results.
+
+**✅ CORRECT - EDS-Rendered Pages:**
+```
+http://localhost:3000/storyhalftold
+http://localhost:3000/test-page
+```
+These pages:
+- Execute block JavaScript decoration
+- Transform DOM structure (e.g., create `<ul><li>` from table markup)
+- Apply proper class names
+- Render exactly as production will
+
+**❌ WRONG - Demo/Local Files:**
+```
+http://localhost:3000/about-page-v3     (if about-page-v3.md is a demo file)
+file:///path/to/page.html
+/path/to/content.html
+```
+These pages:
+- Do NOT execute block JavaScript
+- Show raw HTML without decoration
+- Give false negative results
+- Lead to wasted debugging time
+
+**How to verify you're on a proper EDS page:**
+```javascript
+// In browser console
+const block = document.querySelector('.cards-logos-v2');
+console.log(block.querySelector('ul'));
+// Should show <ul> with <li> items, NOT null or table structure
+```
+
+**Creating a proper test page:**
+1. Create markdown file in root: `storyhalftold.md` or similar
+2. Add exact content from original (same number of items)
+3. Start local server: `npx @adobe/aem-cli up --no-open`
+4. Navigate to: `http://localhost:3000/storyhalftold`
+5. Verify block JavaScript executed by inspecting DOM
 
 **The Loop:**
 
@@ -659,6 +793,207 @@ node tools/eds-migration/cli.js generate-blocks \
 - Documentation report generated
 - Markdown page template created
 - Screenshots saved to project
+
+---
+
+## Critical Learnings: High-Fidelity Block Generation
+
+This section synthesizes key learnings from real block generation experiences that significantly improved block fidelity.
+
+### 1. Count Before You Code
+
+**Problem:** Implementing layout based on visual impression rather than precise counting.
+
+**Example:**
+- Visual impression: "Looks like a 3-column grid"
+- Reality: 5 logos first row, 4 logos second row (flexible wrapping)
+- Wrong implementation: `grid-template-columns: repeat(3, 1fr)` → 3×3 grid
+- Correct implementation: Flexbox with ~16% width → 5/4 split
+
+**Solution:** Always explicitly count items per row in screenshot BEFORE writing any CSS. Document the count (e.g., "5/4 split with 9 total items").
+
+**Impact:** Prevents entire class of layout mistakes where you implement the wrong layout pattern.
+
+---
+
+### 2. Test Environment Matters Critically
+
+**Problem:** Testing on pages where block JavaScript doesn't execute.
+
+**False negative example:**
+```
+❌ Tested on: about-page-v3.md (local markdown file)
+Result: Block shows as plain div, no <ul><li> structure
+Conclusion: "Block broken!" (WRONG)
+
+✅ Tested on: http://localhost:3000/storyhalftold (EDS-rendered)
+Result: Block properly decorated with <ul><li> structure
+Conclusion: Block works correctly
+```
+
+**Solution:** Only test on proper EDS-rendered pages at `http://localhost:3000/{page}`. Never test on demo markdown files or direct file:// URLs.
+
+**Verification:** Check that block JavaScript executed by inspecting DOM for expected structure (e.g., `<ul><li>` for cards blocks).
+
+**Impact:** Eliminates hours of debugging non-existent problems.
+
+---
+
+### 3. Exact Content is Non-Negotiable
+
+**Problem:** Testing with different content than original (e.g., 6 items when original has 9).
+
+**Why it matters:**
+- 9 items with 5/4 split reveals wrapping behavior
+- 8 items might accidentally fit as 4/4
+- 12 items might wrap as 4/4/4 or 6/6
+- Different content = different edge cases = false confidence
+
+**Example:**
+```
+Original: 9 logos → should render as 5/4
+Test with 6 logos → might render as 3/3 and look "correct"
+Deploy with 9 logos → renders as 4/4/1 → BUG
+```
+
+**Solution:** Create test page with EXACT content from original:
+- Same number of items
+- Same content type (real images, not placeholders)
+- Same aspect ratios and sizes
+
+**Impact:** Catches layout bugs during development instead of in production.
+
+---
+
+### 4. Box Model: Always Use box-sizing
+
+**Problem:** Percentage widths + padding without box-sizing causes items to be wider than expected.
+
+**Math without box-sizing:**
+```css
+width: 16.5%; /* 174px */
+padding: 20px; /* 40px total */
+/* ACTUAL width: 174px + 40px = 214px ❌ */
+```
+
+**Math with box-sizing:**
+```css
+box-sizing: border-box;
+width: 15.2%; /* 160px INCLUDING padding */
+padding: 20px;
+/* ACTUAL width: 160px ✅ */
+```
+
+**Real impact:**
+- Without: Only 4 items fit per row (need 163px, have 214px)
+- With: 5 items fit per row perfectly
+
+**Solution:** ALWAYS set `box-sizing: border-box` on items with width + padding/border. Make it a default in your CSS.
+
+**Impact:** Prevents mysterious "items too wide" bugs that waste hours of debugging.
+
+---
+
+### 5. Measure, Don't Assume
+
+**Problem:** Making CSS changes and assuming they work without verification.
+
+**Dangerous pattern:**
+```
+1. Write CSS with 16.5% width
+2. Commit without testing
+3. Assume it works
+4. Move on to next task
+5. Bug discovered weeks later
+```
+
+**Better pattern:**
+```
+1. Write CSS with 16.5% width
+2. Reload page and take screenshot
+3. Count items per row: 4/4/1 (WRONG)
+4. Measure actual width: 214px (too wide)
+5. Calculate needed width: 163px
+6. Adjust to 15.2% with box-sizing
+7. Reload and verify: 5/4 (CORRECT)
+8. NOW commit
+```
+
+**Measurement tools:**
+```javascript
+const item = document.querySelector('.block > ul > li');
+console.log({
+  offsetWidth: item.offsetWidth,              // Actual rendered width
+  computedWidth: getComputedStyle(item).width, // Computed CSS width
+  containerWidth: item.parentElement.offsetWidth
+});
+```
+
+**Solution:** After every CSS change, reload page and explicitly verify by counting items and measuring dimensions.
+
+**Impact:** Eliminates "I thought it would work" bugs. Builds confidence that layout is pixel-perfect.
+
+---
+
+### 6. Iteration is Normal and Expected
+
+**Problem:** Expecting to get layout perfect on first try.
+
+**Reality:** Pixel-perfect layouts require iteration.
+
+**Real example from cards-logos-v2:**
+- Iteration 1: Fixed grid → 3×3 (WRONG)
+- Iteration 2: Flexbox 18% → 9×1 (WORSE - wrong test page)
+- Iteration 3: Flexbox 16.5% → 4/4/1 (CLOSER)
+- Iteration 4: Flexbox 15.2% + box-sizing → 5/4 (PERFECT)
+
+**Time investment:** 4 iterations × 5 minutes = 20 minutes total.
+
+**Value:** Perfect match to original layout.
+
+**Mindset shift:**
+- ❌ "I failed because it took 4 tries"
+- ✅ "Success! I iterated until perfect"
+
+**Solution:** Plan for 3-5 iterations per block. Budget time accordingly. Don't skip verification to "save time" - you'll spend more time debugging later.
+
+**Impact:** Realistic expectations and better time management. Higher quality results.
+
+---
+
+### 7. Visual Layout Analysis is Mandatory
+
+**Problem:** Starting to code immediately after seeing screenshot.
+
+**Better process:**
+1. **Stop** - Don't write code yet
+2. **Analyze** - Count items, identify pattern, document dimensions
+3. **Document** - Write analysis in markdown:
+   ```markdown
+   - Total items: 9
+   - Layout: 5/4 flexible wrapping
+   - Type: Flexbox (not fixed grid)
+   - Width: ~160px per item
+   - Gap: 60px horizontal
+   ```
+4. **Reference** - Use this document when writing CSS
+5. **Verify** - Compare test rendering to this analysis
+
+**Impact:** Forces careful observation. Provides reference for verification. Prevents rushing into wrong implementation.
+
+---
+
+## Summary of Critical Learnings
+
+1. **Count items before coding** - Prevents wrong layout pattern
+2. **Test on proper EDS pages** - Ensures JavaScript executes
+3. **Use exact content** - Reveals real edge cases
+4. **Always use box-sizing** - Prevents width calculation bugs
+5. **Measure actual rendering** - Eliminates assumptions
+6. **Expect 3-5 iterations** - Realistic expectations
+7. **Document layout analysis** - Forces careful observation
+
+**These learnings compound:** Following all 7 dramatically increases block fidelity and reduces debugging time.
 
 ---
 
