@@ -52,54 +52,44 @@ export default function decorate(block) {
   track.classList.add('team-track');
 
   // Transform each row into a team member card
-  rows.forEach((row, idx) => {
+  rows.forEach((row) => {
     const card = document.createElement('div');
     card.classList.add('team-card');
 
     const cols = [...row.children];
-    console.log(`Row ${idx}: ${cols.length} columns`);
-
     if (cols.length >= 2) {
       const imageCol = cols[0];
       const contentCol = cols[1];
 
-      console.log(`Row ${idx} imageCol HTML:`, imageCol.innerHTML);
-      console.log(`Row ${idx} contentCol HTML:`, contentCol.innerHTML);
-
-      // Get image (with picture wrapper from EDS)
-      const picture = imageCol.querySelector('picture');
+      // Get link and heading from content column
       const link = contentCol.querySelector('a');
       const heading = contentCol.querySelector('h3');
 
-      console.log(`Row ${idx} - Picture:`, picture, 'Link:', link, 'Heading:', heading);
-
-      if (picture) {
-        // Create clickable image wrapper
-        const imageLink = document.createElement('a');
-        if (link) {
-          imageLink.href = link.href;
-        }
-        imageLink.classList.add('team-image-link');
-
-        const imageDiv = document.createElement('div');
-        imageDiv.classList.add('team-image');
-        imageDiv.appendChild(picture);
-        imageLink.appendChild(imageDiv);
-
-        card.appendChild(imageLink);
-
-        // Add name below
-        const nameDiv = document.createElement('div');
-        nameDiv.classList.add('team-name');
-        if (heading) {
-          nameDiv.textContent = heading.textContent.trim();
-        }
-        card.appendChild(nameDiv);
-
-        // Only add card if it has content
-        track.appendChild(card);
+      // Create clickable image wrapper
+      const imageLink = document.createElement('a');
+      if (link) {
+        imageLink.href = link.href;
       }
+      imageLink.classList.add('team-image-link');
+
+      // Add all image content (EDS handles picture element)
+      const imageDiv = document.createElement('div');
+      imageDiv.classList.add('team-image');
+      imageDiv.append(...imageCol.children);
+      imageLink.appendChild(imageDiv);
+
+      card.appendChild(imageLink);
+
+      // Add name below
+      const nameDiv = document.createElement('div');
+      nameDiv.classList.add('team-name');
+      if (heading) {
+        nameDiv.textContent = heading.textContent.trim();
+      }
+      card.appendChild(nameDiv);
     }
+
+    track.appendChild(card);
   });
 
   container.appendChild(track);
