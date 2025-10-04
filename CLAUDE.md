@@ -28,6 +28,35 @@ At the start of each conversation, read the following files to understand the pr
 
 
 
+## Quick Tools
+
+### Adding Blocks from Official Repositories
+
+Use the `add-block.sh` script to quickly install blocks from Adobe's official repositories:
+
+```bash
+# Install from boilerplate (default)
+./add-block.sh <blockname>
+./add-block.sh <blockname> boilerplate
+
+# Install from block collection
+./add-block.sh <blockname> collection
+
+# Examples:
+./add-block.sh quote boilerplate
+./add-block.sh breadcrumbs collection
+```
+
+The script will:
+- Create `blocks/<blockname>/` directory
+- Download `<blockname>.js` and `<blockname>.css` from the specified repository
+- Display success message with next steps
+- Show file sizes and suggest git commands
+
+**Available sources:**
+- `boilerplate` - https://github.com/adobe/aem-boilerplate
+- `collection` - https://github.com/adobe/aem-block-collection
+
 ## Global Rules
 
 - Whenever you `cd` somewhere to do something, always navigate back to previous location so next steps are not lost!
