@@ -309,7 +309,143 @@ Contact us today to get started.
 
 ---
 
-### Step 8: Documentation Generation
+### Step 8: Test-Verify-Refine Loop
+
+**Objective:** Iteratively test the block with exact content, verify the rendering matches the original, and refine CSS until perfect.
+
+**Critical Importance:** This step is **mandatory** and cannot be skipped. Visual inspection of screenshots alone is insufficient - you must test with the actual content rendered in EDS.
+
+**Prerequisites:**
+1. **Test page with exact content** - Create a test page in EDS with the same number of items, same text, same images as the original
+2. **Local EDS server running** - `npx @adobe/aem-cli up --no-open`
+3. **Original screenshot for comparison** - Side-by-side reference
+
+**The Loop:**
+
+1. **Initial Implementation**
+   - Write CSS based on visual analysis
+   - Commit and let EDS render
+
+2. **Test**
+   - Navigate to test page: `http://localhost:3000/{test-page}`
+   - Scroll to block section
+   - Take full-page screenshot
+
+3. **Verify**
+   - **Count items per row** - Compare to original (e.g., 5/4 split vs 4/4/1)
+   - **Measure rendered dimensions** - Use browser inspect or Playwright:
+     ```javascript
+     const item = document.querySelector('.block-name > ul > li');
+     const computed = getComputedStyle(item);
+     console.log({
+       actualWidth: item.offsetWidth,
+       computedWidth: computed.width,
+       containerWidth: item.parentElement.offsetWidth
+     });
+     ```
+   - **Compare visually** - Check spacing, alignment, sizing against original
+   - **Document discrepancies** - Note specific differences (e.g., "Items too wide, only 4 fit instead of 5")
+
+4. **Refine**
+   - **Calculate corrections** - Use math to determine needed changes:
+     ```javascript
+     // Example: Need 5 items per row in 1056px container with 60px gaps
+     const spaceForItems = 1056 - (4 * 60); // 4 gaps between 5 items
+     const targetWidth = spaceForItems / 5; // 163.2px per item
+     ```
+   - **Adjust CSS** - Modify width, padding, box-sizing, gaps
+   - **Commit changes**
+   - **Return to step 2 (Test)** until rendering matches original
+
+5. **Success Criteria**
+   - ✅ Item count per row matches original exactly
+   - ✅ Spacing and alignment match original
+   - ✅ No items wrapping unexpectedly
+   - ✅ Responsive behavior works at all breakpoints
+   - ✅ Visual appearance indistinguishable from original
+
+**Example: cards-logos-v2 Refinement**
+
+**Initial state:** Fixed 3-column grid
+```css
+grid-template-columns: repeat(3, 1fr);
+```
+**Result:** 3 rows of 3 logos ❌
+
+**First fix:** Flexbox with 18% width
+```css
+flex: 0 0 auto;
+width: calc(18% - 48px);
+```
+**Result:** 9 rows of 1 logo ❌ (tested on wrong page!)
+
+**Second fix:** Adjusted to 16.5% width
+```css
+flex: 0 1 auto;
+width: 16.5%;
+```
+**Result:** 4 rows, 4 rows, 1 row (4/4/1 split) ❌
+
+**Measured:** Items at 214px, needed 163px for 5 to fit
+**Diagnosis:** Padding added outside width calculation
+
+**Final fix:** Added box-sizing and reduced to 15.2%
+```css
+box-sizing: border-box; /* Include padding in width */
+width: 15.2%; /* 160.5px computed */
+```
+**Result:** 5 logos, 4 logos (5/4 split) ✅ **Perfect!**
+
+**Why Exact Content Matters:**
+
+1. **Edge cases** - 9 items reveals wrapping behavior that 6 or 12 items wouldn't show
+2. **Real measurements** - Actual logo sizes/aspect ratios affect layout
+3. **Gap calculations** - Real spacing between actual content, not placeholder divs
+4. **Accurate counting** - Can't verify "5 in first row" without 9 items rendering
+
+**Common Mistakes to Avoid:**
+
+❌ Testing on demo/local markdown files (blocks don't execute)
+❌ Testing with different content (different number of items)
+❌ Assuming CSS will work without testing
+❌ Comparing only screenshots without measuring
+❌ Skipping the verify step and moving to documentation
+
+✅ Test on proper EDS-rendered pages
+✅ Use exact same content as original
+✅ Measure computed dimensions
+✅ Count items explicitly
+✅ Iterate until perfect match
+
+**Tools for Verification:**
+
+```javascript
+// Count items per row
+const items = Array.from(document.querySelectorAll('.block > ul > li'));
+const itemsPerRow = items.reduce((acc, item, i) => {
+  const top = item.offsetTop;
+  if (!acc[top]) acc[top] = 0;
+  acc[top]++;
+  return acc;
+}, {});
+console.log(Object.values(itemsPerRow)); // [5, 4] ✅
+
+// Measure container and items
+const container = document.querySelector('.block > ul');
+const item = container.querySelector('li');
+console.log({
+  containerWidth: container.offsetWidth,
+  itemWidth: item.offsetWidth,
+  gap: getComputedStyle(container).gap,
+  itemsFit: Math.floor((container.offsetWidth + 60) / (item.offsetWidth + 60))
+});
+```
+
+**Time Investment:** This loop may take 3-5 iterations, but it's essential for pixel-perfect results. Skipping this step results in blocks that "look close" but have subtle layout issues that compound across the site.
+
+---
+
+### Step 9: Documentation Generation
 
 **Objective:** Create comprehensive documentation for each generated block.
 
@@ -485,10 +621,18 @@ We provide comprehensive business solutions.
 [More content here]
 ```
 
-**Step 8: Documentation**
+**Step 8: Test-Verify-Refine**
+- Create test page with exact content from source
+- Start local server: `npx @adobe/aem-cli up --no-open`
+- Test: Navigate to test page and take screenshot
+- Verify: Count items per row, measure dimensions
+- Refine: Adjust CSS based on measurements
+- Iterate until rendering matches original exactly
+
+**Step 9: Documentation**
 - Generate `BLOCK_GENERATION_REPORT.md`
 - Include all screenshots
-- Document reuse strategy
+- Document reuse strategy and refinement iterations
 - Provide usage examples
 
 ---
@@ -527,6 +671,9 @@ node tools/eds-migration/cli.js generate-blocks \
 - ✅ Create independent CSS for each block
 - ✅ Use design tokens consistently
 - ✅ Generate descriptive block names
+- ✅ **Create test page with exact content from original**
+- ✅ **Run test-verify-refine loop until perfect match**
+- ✅ **Count items per row and measure dimensions**
 - ✅ Include comprehensive documentation
 - ✅ Test responsive behavior
 - ✅ Verify image optimization
@@ -536,6 +683,9 @@ node tools/eds-migration/cli.js generate-blocks \
 - ❌ Copy/paste base block JavaScript
 - ❌ Inherit CSS from base blocks
 - ❌ Use generic block names
+- ❌ **Skip the test-verify-refine loop**
+- ❌ **Test with different content than original**
+- ❌ **Assume CSS will work without testing**
 - ❌ Skip documentation
 - ❌ Forget to handle responsive layouts
 - ❌ Hardcode colors/spacing instead of using tokens
