@@ -1,0 +1,114 @@
+.cards-logos-v2-container {
+  margin: 60px auto;
+  padding: 60px 40px;
+  background-color: var(--background-color);
+}
+
+.cards-logos-v2 {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Heading styling */
+.cards-logos-v2-container h2 {
+  font-size: var(--heading-font-size-xl);
+  color: #00a1b7; /* Teal blue heading */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.cards-logos-v2-container p:first-of-type {
+  text-align: center;
+  font-size: var(--body-font-size-m);
+  color: var(--dark-color);
+  margin-bottom: 40px;
+}
+
+/* Flexible layout for logo cards - wraps naturally (5 in first row, 4 in second) */
+.cards-logos-v2 > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px 60px;
+  align-items: center;
+}
+
+.cards-logos-v2 > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: var(--background-color);
+  border: none;
+  /* Flexible width to allow natural wrapping (~5 items per row on desktop) */
+  flex: 0 0 auto;
+  width: calc(18% - 48px); /* ~5.5 items fit, naturally wrapping to 5/4 split */
+  min-width: 150px;
+  max-width: 250px;
+}
+
+/* Logo image styling */
+.cards-logos-v2 .cards-card-image {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards-logos-v2 .cards-card-image picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.cards-logos-v2 .cards-card-image img {
+  max-width: 100%;
+  max-height: 120px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hide card body if present */
+.cards-logos-v2 .cards-card-body {
+  display: none;
+}
+
+/* Tablet responsive - wraps to 3 per row */
+@media (width < 900px) {
+  .cards-logos-v2-container {
+    padding: 40px 24px;
+  }
+
+  .cards-logos-v2 > ul {
+    gap: 32px 40px;
+  }
+
+  .cards-logos-v2 > ul > li {
+    width: calc(30% - 27px); /* ~3 items per row */
+    min-width: 140px;
+  }
+}
+
+/* Mobile responsive - wraps to 2 per row */
+@media (width < 600px) {
+  .cards-logos-v2 > ul {
+    gap: 24px;
+  }
+
+  .cards-logos-v2 > ul > li {
+    width: calc(45% - 12px); /* ~2 items per row */
+    min-width: 120px;
+  }
+
+  .cards-logos-v2 .cards-card-image img {
+    max-height: 100px;
+  }
+}
