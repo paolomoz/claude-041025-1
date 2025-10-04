@@ -1,0 +1,203 @@
+.herosplit {
+  position: relative;
+}
+
+.herosplit-slides-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.herosplit-slides {
+  display: flex;
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  scrollbar-width: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.herosplit-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.herosplit-slide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-width: 100%;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  min-height: 400px;
+}
+
+.herosplit-slide-image {
+  background-color: var(--light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.herosplit-slide-image picture {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.herosplit-slide-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.herosplit-slide-content {
+  background-color: var(--link-color);
+  color: var(--background-color);
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.herosplit-slide-content h1,
+.herosplit-slide-content h2,
+.herosplit-slide-content h3 {
+  color: var(--background-color);
+  font-size: var(--heading-font-size-xxl);
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.herosplit-slide-content p {
+  color: var(--background-color);
+  font-size: var(--body-font-size-m);
+  margin-bottom: 32px;
+}
+
+.herosplit-slide-content a.button {
+  background-color: transparent;
+  border: 2px solid var(--background-color);
+  color: var(--background-color);
+  padding: 12px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  align-self: flex-start;
+}
+
+.herosplit-slide-content a.button::after {
+  content: '›';
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.herosplit-slide-content a.button:hover {
+  background-color: var(--background-color);
+  color: var(--link-color);
+}
+
+/* Navigation buttons */
+.herosplit-navigation-buttons {
+  display: none;
+}
+
+/* Slide indicators */
+.herosplit-slide-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+}
+
+.herosplit-slide-indicator button {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--link-color);
+  border-radius: 50%;
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.herosplit-slide-indicator button[disabled] {
+  background-color: var(--link-color);
+  cursor: default;
+}
+
+.herosplit-slide-indicator button span {
+  display: none;
+}
+
+/* Navigation arrows */
+@media (width >= 900px) {
+  .herosplit-navigation-buttons {
+    display: flex;
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 24px;
+    z-index: 1;
+  }
+
+  .herosplit-navigation-buttons button {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--link-color);
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .herosplit-navigation-buttons button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 12px;
+    height: 12px;
+    border-left: 2px solid var(--link-color);
+    border-bottom: 2px solid var(--link-color);
+  }
+
+  .herosplit-navigation-buttons .slide-next::before {
+    transform: translate(-50%, -50%) rotate(-225deg);
+  }
+
+  .herosplit-navigation-buttons button:hover {
+    background-color: var(--link-color);
+  }
+
+  .herosplit-navigation-buttons button:hover::before {
+    border-color: var(--background-color);
+  }
+}
+
+/* Mobile responsive */
+@media (width < 900px) {
+  .herosplit-slide {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .herosplit-slide-image {
+    padding: 20px;
+    min-height: 300px;
+  }
+
+  .herosplit-slide-content {
+    padding: 40px 24px;
+  }
+
+  .herosplit-slide-content h1,
+  .herosplit-slide-content h2,
+  .herosplit-slide-content h3 {
+    font-size: var(--heading-font-size-xl);
+  }
+}

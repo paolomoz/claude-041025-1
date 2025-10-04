@@ -1,0 +1,104 @@
+.herooverlay {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.herooverlay-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.herooverlay-background::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2));
+}
+
+.herooverlay-background picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.herooverlay-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.herooverlay-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 80px 40px;
+  color: var(--background-color);
+}
+
+.herooverlay-content h1,
+.herooverlay-content h2,
+.herooverlay-content h3 {
+  color: var(--background-color);
+  font-size: var(--heading-font-size-xxl);
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.herooverlay-content p {
+  color: var(--background-color);
+  font-size: var(--body-font-size-m);
+  margin-bottom: 32px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.herooverlay-content a.button {
+  background-color: var(--background-color);
+  border: 2px solid var(--background-color);
+  color: var(--link-color);
+  padding: 12px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.herooverlay-content a.button::after {
+  content: '\29C9';
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.herooverlay-content a.button:hover {
+  background-color: var(--link-color);
+  color: var(--background-color);
+  border-color: var(--link-color);
+}
+
+/* Mobile responsive */
+@media (width < 900px) {
+  .herooverlay {
+    min-height: 300px;
+  }
+
+  .herooverlay-content {
+    padding: 40px 24px;
+  }
+
+  .herooverlay-content h1,
+  .herooverlay-content h2,
+  .herooverlay-content h3 {
+    font-size: var(--heading-font-size-xl);
+  }
+}

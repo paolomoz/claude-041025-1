@@ -16,12 +16,18 @@ At the start of each conversation, read the following files to understand the pr
 ### Reference Materials
 - @./tools/eds-migration/sta-boilerplate-block-library-no-images.json - Available EDS blocks with examples
 - @./tools/eds-migration/block-showcase.md - Complete block showcase with sample implementations (reusable template)
+- @./tools/eds-migration/EXCAT__DESIGN_TOKENS.md - Design tokens reference and adaptation guide
+- @./tools/eds-migration/design-tokens-visual-reference.html - Visual mockup of all design tokens
+- @./tools/eds-migration/EXCAT__AUTOMATED_BLOCK_GENERATION.md - Automated block generation from web pages with code reuse strategy
 - @./tools/eds-migration/NAVIGATION.md - Navigation setup and troubleshooting
 - @./tools/eds-migration/EXCAT__IMAGE_TROUBLESHOOTING.md - Image handling issues and solutions
 - @./tools/eds-migration/EXCAT__DEBUGGING.md - General debugging techniques and common issues
 
 ### When to Reference
 - **block-showcase.md**: Use as a template when creating new pages with block examples, or when needing markdown syntax for any implemented block
+- **EXCAT__DESIGN_TOKENS.md**: Read when adapting EDS project to an existing design system, or when needing to understand/modify global styling tokens
+- **design-tokens-visual-reference.html**: Open in browser to see visual examples of all design tokens (colors, typography, spacing, etc.)
+- **EXCAT__AUTOMATED_BLOCK_GENERATION.md**: Read when generating blocks from existing web pages - provides automated workflow for analysis, screenshot capture, block identification, code reuse strategy, and naming conventions
 - **EXCAT__IMAGE_TROUBLESHOOTING.md**: Read when encountering image rendering issues, "about:error" problems, or when implementing blocks with images
 - **EXCAT__DEBUGGING.md**: Read when troubleshooting any EDS issues - provides systematic debugging approaches and CLI commands
 - **NAVIGATION.md**: Read when working with site navigation or encountering link styling issues

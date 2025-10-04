@@ -1,0 +1,75 @@
+.cardsred > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.cardsred > ul > li {
+  border: none;
+  background-color: var(--background-color);
+  overflow: hidden;
+}
+
+.cardsred .cardsred-card-body {
+  background-color: var(--link-color);
+  color: var(--background-color);
+  padding: 32px 24px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardsred .cardsred-card-body h2,
+.cardsred .cardsred-card-body h3,
+.cardsred .cardsred-card-body h4 {
+  color: var(--background-color);
+  margin-top: 0;
+  font-size: var(--heading-font-size-l);
+}
+
+.cardsred .cardsred-card-body p {
+  color: var(--background-color);
+  margin-bottom: 24px;
+}
+
+.cardsred .cardsred-card-image {
+  line-height: 0;
+}
+
+.cardsred > ul > li img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* Button styling for Learn more links */
+.cardsred .cardsred-card-body .button-container {
+  margin-top: auto;
+}
+
+.cardsred .cardsred-card-body a.button {
+  background-color: transparent;
+  border: 2px solid var(--background-color);
+  color: var(--background-color);
+  padding: 12px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.cardsred .cardsred-card-body a.button::after {
+  content: '›';
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.cardsred .cardsred-card-body a.button:hover {
+  background-color: var(--background-color);
+  color: var(--link-color);
+}

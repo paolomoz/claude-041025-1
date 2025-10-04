@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDS Design Tokens - Visual Reference</title>
+  <link rel="stylesheet" href="/styles/styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: block !important;
+      font-family: var(--body-font-family);
+      background: #f0f0f0;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .tokens-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .token-section {
+      margin-bottom: 60px;
+    }
+
+    .token-section h2 {
+      font-family: var(--heading-font-family);
+      font-size: var(--heading-font-size-xl);
+      color: var(--text-color);
+      border-bottom: 3px solid var(--link-color);
+      padding-bottom: 12px;
+      margin-bottom: 30px;
+    }
+
+    .token-section h3 {
+      font-family: var(--heading-font-family);
+      font-size: var(--heading-font-size-m);
+      color: var(--dark-color);
+      margin-top: 30px;
+      margin-bottom: 16px;
+    }
+
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .token-item {
+      border: 1px solid #dadada;
+      border-radius: 8px;
+      padding: 20px;
+      background: var(--background-color);
+    }
+
+    .token-label {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--dark-color);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .token-value {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    /* Color swatches */
+    .color-swatch {
+      width: 100%;
+      height: 80px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      margin-bottom: 8px;
+    }
+
+    /* Typography samples */
+    .type-sample {
+      margin: 12px 0;
+      padding: 12px;
+      background: var(--light-color);
+      border-radius: 4px;
+    }
+
+    .heading-sample h1,
+    .heading-sample h2,
+    .heading-sample h3,
+    .heading-sample h4,
+    .heading-sample h5,
+    .heading-sample h6 {
+      margin: 8px 0;
+    }
+
+    /* Button samples */
+    .button-sample {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 20px 0;
+      padding: 20px;
+      background: var(--light-color);
+      border-radius: 8px;
+    }
+
+    /* Spacing samples */
+    .spacing-sample {
+      background: var(--light-color);
+      border-radius: 4px;
+      padding: 12px;
+      margin: 12px 0;
+    }
+
+    .spacing-box {
+      background: var(--link-color);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    /* Layout samples */
+    .layout-sample {
+      border: 2px dashed var(--link-color);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      background: var(--light-color);
+    }
+
+    .layout-box {
+      background: white;
+      padding: 20px;
+      border: 1px solid #dadada;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    /* Card preview */
+    .card-preview {
+      border: 1px solid #dadada;
+      background-color: var(--background-color);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .card-preview-image {
+      width: 100%;
+      height: 150px;
+      background: linear-gradient(135deg, var(--link-color), var(--link-hover-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    .card-preview-body {
+      padding: 16px;
+    }
+
+    code {
+      background: var(--light-color);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tokens-container">
+    <h1>EDS Design Tokens - Visual Reference</h1>
+    <p>This mockup displays all design tokens extracted from the current EDS project CSS files.</p>
+
+    <!-- Colors -->
+    <div class="token-section">
+      <h2>Colors</h2>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="token-label">--background-color</div>
+          <div class="color-swatch" style="background-color: var(--background-color);"></div>
+          <div class="token-value">white</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--light-color</div>
+          <div class="color-swatch" style="background-color: var(--light-color);"></div>
+          <div class="token-value">#f8f8f8</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--dark-color</div>
+          <div class="color-swatch" style="background-color: var(--dark-color);"></div>
+          <div class="token-value">#505050</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--text-color</div>
+          <div class="color-swatch" style="background-color: var(--text-color);"></div>
+          <div class="token-value">#131313</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--link-color</div>
+          <div class="color-swatch" style="background-color: var(--link-color);"></div>
+          <div class="token-value">#3b63fb</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--link-hover-color</div>
+          <div class="color-swatch" style="background-color: var(--link-hover-color);"></div>
+          <div class="token-value">#1d3ecf</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography - Font Families -->
+    <div class="token-section">
+      <h2>Typography - Font Families</h2>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="token-label">--body-font-family</div>
+          <div class="type-sample" style="font-family: var(--body-font-family);">
+            The quick brown fox jumps over the lazy dog.
+          </div>
+          <div class="token-value">roboto, roboto-fallback, sans-serif</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--heading-font-family</div>
+          <div class="type-sample" style="font-family: var(--heading-font-family); font-weight: 600;">
+            The quick brown fox jumps over the lazy dog.
+          </div>
+          <div class="token-value">roboto-condensed, roboto-condensed-fallback, sans-serif</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography - Sizes -->
+    <div class="token-section">
+      <h2>Typography - Sizes</h2>
+
+      <h3>Body Sizes</h3>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="token-label">--body-font-size-m</div>
+          <div class="type-sample" style="font-size: var(--body-font-size-m);">
+            Default body text size
+          </div>
+          <div class="token-value">Mobile: 22px | Desktop: 18px</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--body-font-size-s</div>
+          <div class="type-sample" style="font-size: var(--body-font-size-s);">
+            Small body text size
+          </div>
+          <div class="token-value">Mobile: 19px | Desktop: 16px</div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">--body-font-size-xs</div>
+          <div class="type-sample" style="font-size: var(--body-font-size-xs);">
+            Extra small text
+          </div>
+          <div class="token-value">Mobile: 17px | Desktop: 14px</div>
+        </div>
+      </div>
+
+      <h3>Heading Sizes</h3>
+      <div class="heading-sample">
+        <h1>H1 Heading (--heading-font-size-xxl)</h1>
+        <div class="token-value">Mobile: 55px | Desktop: 45px</div>
+
+        <h2>H2 Heading (--heading-font-size-xl)</h2>
+        <div class="token-value">Mobile: 44px | Desktop: 36px</div>
+
+        <h3>H3 Heading (--heading-font-size-l)</h3>
+        <div class="token-value">Mobile: 34px | Desktop: 28px</div>
+
+        <h4>H4 Heading (--heading-font-size-m)</h4>
+        <div class="token-value">Mobile: 27px | Desktop: 22px</div>
+
+        <h5>H5 Heading (--heading-font-size-s)</h5>
+        <div class="token-value">Mobile: 24px | Desktop: 20px</div>
+
+        <h6>H6 Heading (--heading-font-size-xs)</h6>
+        <div class="token-value">Mobile: 22px | Desktop: 18px</div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="token-section">
+      <h2>Buttons</h2>
+      <div class="button-sample">
+        <a href="#" class="button">Primary Button</a>
+        <a href="#" class="button secondary">Secondary Button</a>
+        <button disabled>Disabled Button</button>
+      </div>
+      <div class="token-value">
+        <strong>Properties:</strong><br>
+        • Border: 2px solid transparent<br>
+        • Border radius: 2.4em<br>
+        • Padding: 0.5em 1.2em<br>
+        • Font weight: 500<br>
+        • Background: var(--link-color)<br>
+        • Color: var(--background-color)
+      </div>
+    </div>
+
+    <!-- Spacing -->
+    <div class="token-section">
+      <h2>Spacing & Margins</h2>
+
+      <h3>Heading Margins</h3>
+      <div class="token-value">
+        • margin-top: 0.8em<br>
+        • margin-bottom: 0.25em<br>
+        • scroll-margin: 40px
+      </div>
+
+      <h3>Block Element Margins</h3>
+      <div class="token-value">
+        • margin-top: 0.8em<br>
+        • margin-bottom: 0.25em
+      </div>
+
+      <h3>Section Spacing</h3>
+      <div class="spacing-sample">
+        <div class="spacing-box" style="margin: 40px 16px;">
+          main > div: margin 40px 16px
+        </div>
+      </div>
+      <div class="spacing-sample">
+        <div class="spacing-box" style="margin: 40px 0;">
+          main > .section: margin 40px 0
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout -->
+    <div class="token-section">
+      <h2>Layout</h2>
+
+      <h3>Navigation Height</h3>
+      <div class="layout-sample" style="height: var(--nav-height);">
+        <div class="layout-box">
+          --nav-height: 64px
+        </div>
+      </div>
+
+      <h3>Content Max Width</h3>
+      <div class="layout-sample" style="max-width: 1200px; margin: 20px auto;">
+        <div class="layout-box">
+          max-width: 1200px (standard content width)<br>
+          padding: 0 24px (mobile) | 0 32px (desktop)
+        </div>
+      </div>
+    </div>
+
+    <!-- Borders -->
+    <div class="token-section">
+      <h2>Borders & Radius</h2>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="token-label">Button Border Radius</div>
+          <div style="background: var(--link-color); color: white; padding: 12px; border-radius: 2.4em; text-align: center;">
+            2.4em
+          </div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">Pre/Code Border Radius</div>
+          <div style="background: var(--link-color); color: white; padding: 12px; border-radius: 8px; text-align: center;">
+            8px
+          </div>
+        </div>
+        <div class="token-item">
+          <div class="token-label">Card Border</div>
+          <div style="border: 1px solid #dadada; padding: 20px; text-align: center;">
+            1px solid #dadada
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Example -->
+    <div class="token-section">
+      <h2>Block Example - Cards</h2>
+      <div class="token-grid">
+        <div class="card-preview">
+          <div class="card-preview-image">Image (4:3 aspect ratio)</div>
+          <div class="card-preview-body">
+            <h4>Card Title</h4>
+            <p>Card body with margin: 16px. Border: 1px solid #dadada</p>
+            <a href="#" class="button">Call to Action</a>
+          </div>
+        </div>
+        <div class="card-preview">
+          <div class="card-preview-image">Image (4:3 aspect ratio)</div>
+          <div class="card-preview-body">
+            <h4>Another Card</h4>
+            <p>Cards grid uses: grid-template-columns: repeat(auto-fill, minmax(257px, 1fr))</p>
+            <a href="#" class="button secondary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="token-value">
+        <strong>Grid properties:</strong><br>
+        • grid-template-columns: repeat(auto-fill, minmax(257px, 1fr))<br>
+        • gap: 24px<br>
+        • Image aspect-ratio: 4 / 3
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="token-section">
+      <h2>Links</h2>
+      <div class="type-sample">
+        <a href="#">This is a regular link</a> with color: var(--link-color)<br>
+        <a href="#" style="color: var(--link-hover-color);">This shows hover state</a> with color: var(--link-hover-color)
+      </div>
+      <div class="token-value">
+        • text-decoration: none (default)<br>
+        • text-decoration: underline (hover)<br>
+        • overflow-wrap: break-word
+      </div>
+    </div>
+
+    <!-- Section Variants -->
+    <div class="token-section">
+      <h2>Section Variants</h2>
+
+      <div class="layout-sample" style="background-color: var(--light-color); padding: 40px 0;">
+        <div class="layout-box">
+          <strong>section.light / section.highlight</strong><br>
+          background-color: var(--light-color)<br>
+          margin: 0<br>
+          padding: 40px 0
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
