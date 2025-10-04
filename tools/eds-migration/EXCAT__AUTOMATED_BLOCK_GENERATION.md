@@ -251,20 +251,35 @@ We provide comprehensive solutions for your business needs.
 - 24/7 support
 ```
 
-**Block Content Example:**
+**Block Content Example (Cards - Row-based structure):**
 ```markdown
-+-------------------------------------------------------------+
-| **Cards-services**                                          |
-+-------------------------------------------------------------+
-| ![Service 1](/images/service-1.jpg)                         |
-+-------------------------------------------------------------+
-| ## Consulting                                               |
-|                                                             |
-| Expert guidance for your digital transformation journey.    |
-|                                                             |
-| **[Learn more](/consulting)**                               |
-+-------------------------------------------------------------+
++-------------------------------------+--------------------------------------+
+| **Cards-services**                                                         |
++-------------------------------------+--------------------------------------+
+| ![Service 1](/images/service-1.jpg) | ## Consulting                        |
+|                                     |                                      |
+|                                     | Expert guidance for your digital     |
+|                                     | transformation journey.              |
+|                                     |                                      |
+|                                     | **[Learn more](/consulting)**        |
++-------------------------------------+--------------------------------------+
+| ![Service 2](/images/service-2.jpg) | ## Development                       |
+|                                     |                                      |
+|                                     | Custom solutions built for your      |
+|                                     | specific needs.                      |
+|                                     |                                      |
+|                                     | **[Learn more](/development)**       |
++-------------------------------------+--------------------------------------+
+| ![Service 3](/images/service-3.jpg) | ## Support                           |
+|                                     |                                      |
+|                                     | 24/7 assistance for your peace of    |
+|                                     | mind.                                |
+|                                     |                                      |
+|                                     | **[Learn more](/support)**           |
++-------------------------------------+--------------------------------------+
 ```
+
+**Important:** Each card is a **row** (not a column). First column = image, second column = text. This structure matches what the cards.js expects.
 
 **Combined Example:**
 ```markdown
@@ -272,17 +287,22 @@ We provide comprehensive solutions for your business needs.
 
 We deliver excellence in every project.
 
-+-------------------------------------------------------------+
-| **Cards-services**                                          |
-+-------------------------------------------------------------+
-| ![Service 1](/images/service-1.jpg)                         |
-+-------------------------------------------------------------+
-| ## Consulting                                               |
-|                                                             |
-| Expert guidance for your digital transformation.            |
-|                                                             |
-| **[Learn more](/consulting)**                               |
-+-------------------------------------------------------------+
++-------------------------------------+--------------------------------------+
+| **Cards-services**                                                         |
++-------------------------------------+--------------------------------------+
+| ![Service 1](/images/service-1.jpg) | ## Consulting                        |
+|                                     |                                      |
+|                                     | Expert guidance for your digital     |
+|                                     | transformation.                      |
+|                                     |                                      |
+|                                     | **[Learn more](/consulting)**        |
++-------------------------------------+--------------------------------------+
+| ![Service 2](/images/service-2.jpg) | ## Development                       |
+|                                     |                                      |
+|                                     | Custom solutions for your needs.     |
+|                                     |                                      |
+|                                     | **[Learn more](/development)**       |
++-------------------------------------+--------------------------------------+
 
 Contact us today to get started.
 ```
@@ -446,17 +466,21 @@ We provide comprehensive business solutions.
 
 ## What We Offer
 
-+-------------------------------------------------------------+
-| **Cards-services**                                          |
-+-------------------------------------------------------------+
-| ![Consulting](/images/consulting.jpg)                       |
-+-------------------------------------------------------------+
-| ## Consulting                                               |
-|                                                             |
-| Expert guidance for growth.                                 |
-|                                                             |
-| **[Learn more](/consulting)**                               |
-+-------------------------------------------------------------+
++------------------------------------+-------------------------------------+
+| **Cards-services**                                                       |
++------------------------------------+-------------------------------------+
+| ![Consulting](/images/consult.jpg) | ## Consulting                       |
+|                                    |                                     |
+|                                    | Expert guidance for growth.         |
+|                                    |                                     |
+|                                    | **[Learn more](/consulting)**       |
++------------------------------------+-------------------------------------+
+| ![Development](/images/dev.jpg)    | ## Development                      |
+|                                    |                                     |
+|                                    | Custom solutions for your needs.    |
+|                                    |                                     |
+|                                    | **[Learn more](/development)**      |
++------------------------------------+-------------------------------------+
 
 [More content here]
 ```
