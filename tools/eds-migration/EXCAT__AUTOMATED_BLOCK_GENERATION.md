@@ -30,6 +30,10 @@ This document describes the automated workflow for generating EDS blocks from ex
 
 ### Step 1.5: Visual Layout Analysis (CRITICAL)
 
+**TL;DR:** Count items per row BEFORE coding. Document exact layout pattern (fixed grid vs flexible wrapping). Use this analysis as reference when writing CSS.
+
+---
+
 **Objective:** Explicitly analyze and document the visual layout BEFORE writing any code.
 
 **MANDATORY for all blocks with repeating items (cards, logos, grids, carousels):**
@@ -399,6 +403,12 @@ Contact us today to get started.
 ---
 
 ### Step 8: Test-Verify-Refine Loop
+
+**TL;DR:** Test on EDS-rendered pages (`http://localhost:3000/{page}`), NOT demo files. Use exact content. Count items per row, measure dimensions, iterate 3-5 times until perfect match.
+
+**CRITICAL:** Demo/local markdown files don't execute block JavaScript - always gives false negatives. Only test on proper EDS-rendered pages.
+
+---
 
 **Objective:** Iteratively test the block with exact content, verify the rendering matches the original, and refine CSS until perfect.
 
@@ -779,6 +789,10 @@ node tools/eds-migration/cli.js generate-blocks \
 ---
 
 ## Critical Learnings: High-Fidelity Block Generation
+
+**TL;DR:** (1) Count items before coding, (2) Test on proper EDS pages, (3) Use exact content, (4) Always add box-sizing, (5) Measure don't assume, (6) Expect 3-5 iterations, (7) Analyze layout before implementation.
+
+---
 
 This section synthesizes key learnings from real block generation experiences that significantly improved block fidelity.
 
