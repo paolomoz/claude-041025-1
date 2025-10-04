@@ -498,44 +498,26 @@ console.log(block.querySelector('ul'));
    - ✅ Responsive behavior works at all breakpoints
    - ✅ Visual appearance indistinguishable from original
 
-**Example: cards-logos-v2 Refinement**
+**Example Iteration Pattern:**
 
-**Initial state:** Fixed 3-column grid
-```css
-grid-template-columns: repeat(3, 1fr);
-```
-**Result:** 3 rows of 3 logos ❌
+**Iteration 1:** Wrong layout type (fixed grid instead of flexible wrapping)
+- Result: Wrong item distribution ❌
 
-**First fix:** Flexbox with 18% width
-```css
-flex: 0 0 auto;
-width: calc(18% - 48px);
-```
-**Result:** 9 rows of 1 logo ❌ (tested on wrong page!)
+**Iteration 2:** Wrong test environment (demo page without JavaScript)
+- Result: False negative, looks completely broken ❌
 
-**Second fix:** Adjusted to 16.5% width
-```css
-flex: 0 1 auto;
-width: 16.5%;
-```
-**Result:** 4 rows, 4 rows, 1 row (4/4/1 split) ❌
+**Iteration 3:** Correct approach but missing box-sizing
+- Result: Items too wide, wrong wrapping ❌
 
-**Measured:** Items at 214px, needed 163px for 5 to fit
-**Diagnosis:** Padding added outside width calculation
-
-**Final fix:** Added box-sizing and reduced to 15.2%
-```css
-box-sizing: border-box; /* Include padding in width */
-width: 15.2%; /* 160.5px computed */
-```
-**Result:** 5 logos, 4 logos (5/4 split) ✅ **Perfect!**
+**Iteration 4:** Correct box-sizing + measured adjustments
+- Result: Perfect match to original ✅
 
 **Why Exact Content Matters:**
 
-1. **Edge cases** - 9 items reveals wrapping behavior that 6 or 12 items wouldn't show
-2. **Real measurements** - Actual logo sizes/aspect ratios affect layout
-3. **Gap calculations** - Real spacing between actual content, not placeholder divs
-4. **Accurate counting** - Can't verify "5 in first row" without 9 items rendering
+1. **Edge cases** - Specific item counts reveal wrapping behavior
+2. **Real measurements** - Actual content sizes affect layout calculations
+3. **Gap calculations** - Real spacing vs placeholders
+4. **Accurate verification** - Can't count items without actual content
 
 **Common Mistakes to Avoid:**
 
@@ -806,13 +788,13 @@ This section synthesizes key learnings from real block generation experiences th
 
 **Example:**
 - Visual impression: "Looks like a 3-column grid"
-- Reality: 5 logos first row, 4 logos second row (flexible wrapping)
-- Wrong implementation: `grid-template-columns: repeat(3, 1fr)` → 3×3 grid
-- Correct implementation: Flexbox with ~16% width → 5/4 split
+- Reality: Flexible wrapping (e.g., 5 items then 4 items)
+- Wrong: Fixed grid → equal columns
+- Correct: Flexbox → natural wrapping
 
-**Solution:** Always explicitly count items per row in screenshot BEFORE writing any CSS. Document the count (e.g., "5/4 split with 9 total items").
+**Solution:** Always count items per row in screenshot BEFORE writing CSS. Document the pattern.
 
-**Impact:** Prevents entire class of layout mistakes where you implement the wrong layout pattern.
+**Impact:** Prevents implementing wrong layout type (fixed vs flexible).
 
 ---
 
@@ -820,144 +802,107 @@ This section synthesizes key learnings from real block generation experiences th
 
 **Problem:** Testing on pages where block JavaScript doesn't execute.
 
-**False negative example:**
+**Example:**
 ```
-❌ Tested on: about-page-v3.md (local markdown file)
-Result: Block shows as plain div, no <ul><li> structure
-Conclusion: "Block broken!" (WRONG)
+❌ Local markdown file: Block shows as plain div
+→ False conclusion: "Block broken!"
 
-✅ Tested on: http://localhost:3000/storyhalftold (EDS-rendered)
-Result: Block properly decorated with <ul><li> structure
-Conclusion: Block works correctly
+✅ EDS-rendered page: Block properly decorated
+→ Correct conclusion: Block works
 ```
 
-**Solution:** Only test on proper EDS-rendered pages at `http://localhost:3000/{page}`. Never test on demo markdown files or direct file:// URLs.
+**Solution:** Only test on `http://localhost:3000/{page}` (EDS-rendered). Never test on demo files or file:// URLs.
 
-**Verification:** Check that block JavaScript executed by inspecting DOM for expected structure (e.g., `<ul><li>` for cards blocks).
+**Verification:** Inspect DOM to confirm decoration (e.g., `<ul><li>` exists).
 
-**Impact:** Eliminates hours of debugging non-existent problems.
+**Impact:** Eliminates debugging non-existent problems.
 
 ---
 
 ### 3. Exact Content is Non-Negotiable
 
-**Problem:** Testing with different content than original (e.g., 6 items when original has 9).
+**Problem:** Testing with different content than original.
 
-**Why it matters:**
-- 9 items with 5/4 split reveals wrapping behavior
-- 8 items might accidentally fit as 4/4
-- 12 items might wrap as 4/4/4 or 6/6
-- Different content = different edge cases = false confidence
+**Why different content hides bugs:**
+- Different item counts → different wrapping behavior
+- Different item counts might accidentally look correct
+- Edge cases only appear with exact content
 
-**Example:**
-```
-Original: 9 logos → should render as 5/4
-Test with 6 logos → might render as 3/3 and look "correct"
-Deploy with 9 logos → renders as 4/4/1 → BUG
-```
-
-**Solution:** Create test page with EXACT content from original:
+**Solution:** Test with EXACT content from original:
 - Same number of items
 - Same content type (real images, not placeholders)
-- Same aspect ratios and sizes
+- Same aspect ratios
 
-**Impact:** Catches layout bugs during development instead of in production.
+**Impact:** Catches layout bugs in development, not production.
 
 ---
 
 ### 4. Box Model: Always Use box-sizing
 
-**Problem:** Percentage widths + padding without box-sizing causes items to be wider than expected.
+**Problem:** Percentage widths + padding without box-sizing = items wider than expected.
 
-**Math without box-sizing:**
+**Without box-sizing:**
 ```css
-width: 16.5%; /* 174px */
-padding: 20px; /* 40px total */
-/* ACTUAL width: 174px + 40px = 214px ❌ */
+width: 16%; padding: 20px;
+/* ACTUAL width: 16% + 40px (too wide!) ❌ */
 ```
 
-**Math with box-sizing:**
+**With box-sizing:**
 ```css
 box-sizing: border-box;
-width: 15.2%; /* 160px INCLUDING padding */
-padding: 20px;
-/* ACTUAL width: 160px ✅ */
+width: 16%; padding: 20px;
+/* ACTUAL width: 16% including padding ✅ */
 ```
 
-**Real impact:**
-- Without: Only 4 items fit per row (need 163px, have 214px)
-- With: 5 items fit per row perfectly
+**Solution:** Always set `box-sizing: border-box` on items with width + padding/border.
 
-**Solution:** ALWAYS set `box-sizing: border-box` on items with width + padding/border. Make it a default in your CSS.
-
-**Impact:** Prevents mysterious "items too wide" bugs that waste hours of debugging.
+**Impact:** Prevents "items too wide" bugs.
 
 ---
 
 ### 5. Measure, Don't Assume
 
-**Problem:** Making CSS changes and assuming they work without verification.
+**Problem:** Making CSS changes without verification.
 
-**Dangerous pattern:**
-```
-1. Write CSS with 16.5% width
-2. Commit without testing
-3. Assume it works
-4. Move on to next task
-5. Bug discovered weeks later
-```
+**Dangerous:** Write CSS → Commit → Assume it works → Bug found later
 
-**Better pattern:**
-```
-1. Write CSS with 16.5% width
-2. Reload page and take screenshot
-3. Count items per row: 4/4/1 (WRONG)
-4. Measure actual width: 214px (too wide)
-5. Calculate needed width: 163px
-6. Adjust to 15.2% with box-sizing
-7. Reload and verify: 5/4 (CORRECT)
-8. NOW commit
-```
+**Correct:** Write CSS → Test → Measure → Verify → Adjust → Repeat → Commit
 
 **Measurement tools:**
 ```javascript
 const item = document.querySelector('.block > ul > li');
 console.log({
-  offsetWidth: item.offsetWidth,              // Actual rendered width
-  computedWidth: getComputedStyle(item).width, // Computed CSS width
+  offsetWidth: item.offsetWidth,              // Actual width
+  computedWidth: getComputedStyle(item).width, // CSS width
   containerWidth: item.parentElement.offsetWidth
 });
 ```
 
-**Solution:** After every CSS change, reload page and explicitly verify by counting items and measuring dimensions.
+**Solution:** After every CSS change, reload page and verify by counting items and measuring dimensions.
 
-**Impact:** Eliminates "I thought it would work" bugs. Builds confidence that layout is pixel-perfect.
+**Impact:** Eliminates "I thought it would work" bugs.
 
 ---
 
 ### 6. Iteration is Normal and Expected
 
-**Problem:** Expecting to get layout perfect on first try.
+**Problem:** Expecting perfect layout on first try.
 
-**Reality:** Pixel-perfect layouts require iteration.
+**Reality:** Pixel-perfect layouts require iteration (typically 3-5 rounds).
 
-**Real example from cards-logos-v2:**
-- Iteration 1: Fixed grid → 3×3 (WRONG)
-- Iteration 2: Flexbox 18% → 9×1 (WORSE - wrong test page)
-- Iteration 3: Flexbox 16.5% → 4/4/1 (CLOSER)
-- Iteration 4: Flexbox 15.2% + box-sizing → 5/4 (PERFECT)
-
-**Time investment:** 4 iterations × 5 minutes = 20 minutes total.
-
-**Value:** Perfect match to original layout.
+**Typical pattern:**
+- Round 1: Wrong approach
+- Round 2: Better approach, still issues
+- Round 3: Close, minor adjustments needed
+- Round 4: Perfect
 
 **Mindset shift:**
-- ❌ "I failed because it took 4 tries"
-- ✅ "Success! I iterated until perfect"
+- ❌ "Failed - took 4 tries"
+- ✅ "Success - iterated to perfection"
 
-**Solution:** Plan for 3-5 iterations per block. Budget time accordingly. Don't skip verification to "save time" - you'll spend more time debugging later.
+**Solution:** Budget 20-30 minutes per block for iteration. Don't skip verification to "save time."
 
-**Impact:** Realistic expectations and better time management. Higher quality results.
+**Impact:** Realistic expectations, higher quality results.
 
 ---
 
@@ -968,18 +913,15 @@ console.log({
 **Better process:**
 1. **Stop** - Don't write code yet
 2. **Analyze** - Count items, identify pattern, document dimensions
-3. **Document** - Write analysis in markdown:
-   ```markdown
-   - Total items: 9
-   - Layout: 5/4 flexible wrapping
-   - Type: Flexbox (not fixed grid)
-   - Width: ~160px per item
-   - Gap: 60px horizontal
-   ```
-4. **Reference** - Use this document when writing CSS
-5. **Verify** - Compare test rendering to this analysis
+3. **Document** - Write analysis:
+   - Total items: X
+   - Layout pattern: Y items per row
+   - Type: Fixed grid or flexible wrapping
+   - Approximate dimensions
+4. **Reference** - Use document when writing CSS
+5. **Verify** - Compare rendering to analysis
 
-**Impact:** Forces careful observation. Provides reference for verification. Prevents rushing into wrong implementation.
+**Impact:** Forces observation, prevents wrong implementation.
 
 ---
 
