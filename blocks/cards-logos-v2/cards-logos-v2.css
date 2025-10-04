@@ -46,11 +46,12 @@
   padding: 20px;
   background-color: var(--background-color);
   border: none;
-  /* Flexible width to allow natural wrapping (~5 items per row on desktop) */
-  flex: 0 0 auto;
-  width: calc(18% - 48px); /* ~5.5 items fit, naturally wrapping to 5/4 split */
-  min-width: 150px;
-  max-width: 250px;
+  box-sizing: border-box; /* Include padding in width calculation */
+  /* Flexible width to allow 5 items in first row, 4 in second (5/4 split) */
+  flex: 0 1 auto; /* Allow items to shrink slightly if needed */
+  width: 15.2%; /* Target width for ~5 items per row (160px with gaps) */
+  min-width: 140px;
+  max-width: 200px;
 }
 
 /* Logo image styling */
