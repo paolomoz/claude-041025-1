@@ -27,7 +27,11 @@ At the start of each conversation, read the following files to understand the pr
 - **block-showcase.md**: Use as a template when creating new pages with block examples, or when needing markdown syntax for any implemented block
 - **EXCAT__DESIGN_TOKENS.md**: Read when adapting EDS project to an existing design system, or when needing to understand/modify global styling tokens
 - **design-tokens-visual-reference.html**: Open in browser to see visual examples of all design tokens (colors, typography, spacing, etc.)
-- **EXCAT__AUTOMATED_BLOCK_GENERATION.md**: Read when generating blocks from existing web pages - provides automated workflow for analysis, screenshot capture, block identification, code reuse strategy, and naming conventions
+- **EXCAT__AUTOMATED_BLOCK_GENERATION.md**: **CRITICAL for block generation** - Provides automated workflow with mandatory steps:
+  - **Step 1.5: Visual Layout Analysis** - Count items per row BEFORE coding to prevent wrong layout patterns
+  - **Step 8: Test-Verify-Refine Loop** - Iterative testing with exact content on proper EDS pages until pixel-perfect
+  - **Critical Learnings section** - 7 key insights for high-fidelity blocks (box-sizing, test environment, measurement, etc.)
+  - Code reuse strategy, naming conventions, CSS implementation patterns
 - **EXCAT__IMAGE_TROUBLESHOOTING.md**: Read when encountering image rendering issues, "about:error" problems, or when implementing blocks with images
 - **EXCAT__DEBUGGING.md**: Read when troubleshooting any EDS issues - provides systematic debugging approaches and CLI commands
 - **NAVIGATION.md**: Read when working with site navigation or encountering link styling issues
