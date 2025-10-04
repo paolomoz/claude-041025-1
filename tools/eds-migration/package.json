@@ -1,0 +1,27 @@
+{
+  "name": "excatop-agentic-tools",
+  "version": "1.0.1",
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "excatop-tools": "./cli.js"
+  },
+  "scripts": {
+    "convert-html": "node cli.js convert-html",
+    "upload-da": "node cli.js upload-da",
+    "fix-tables": "node cli.js fix-tables",
+    "process-urls": "node cli.js process-urls",
+    "help": "node cli.js help",
+    "chat": "node server.js"
+  },
+  "dependencies": {
+    "@adobe/helix-html-pipeline": "^6.27.0",
+    "@anthropic-ai/sdk": "^0.30.0",
+    "dotenv": "17.2.2",
+    "express": "^4.18.0",
+    "hast-util-to-html": "^9.0.0",
+    "sharp": "^0.33.0",
+    "zod": "^3.23.8"
+  }
+}

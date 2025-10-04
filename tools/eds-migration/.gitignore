@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Working files
+content*.html
+content*.md
+nav-*.html
+page-*.html
+page-*.md
+
+# Playwright MCP
+.playwright-mcp/
+
+# Public assets (generated)
+public/
+
+# Development server
+server.js

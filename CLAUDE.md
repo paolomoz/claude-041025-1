@@ -32,19 +32,19 @@ At the start of each conversation, read the following files to understand the pr
 
 ### Adding Blocks from Official Repositories
 
-Use the `add-block.sh` script to quickly install blocks from Adobe's official repositories:
+Use the `tools/eds-migration/helpers/add-block.sh` script to quickly install blocks from Adobe's official repositories:
 
 ```bash
 # Install from boilerplate (default)
-./add-block.sh <blockname>
-./add-block.sh <blockname> boilerplate
+./tools/eds-migration/helpers/add-block.sh <blockname>
+./tools/eds-migration/helpers/add-block.sh <blockname> boilerplate
 
 # Install from block collection
-./add-block.sh <blockname> collection
+./tools/eds-migration/helpers/add-block.sh <blockname> collection
 
 # Examples:
-./add-block.sh quote boilerplate
-./add-block.sh breadcrumbs collection
+./tools/eds-migration/helpers/add-block.sh quote boilerplate
+./tools/eds-migration/helpers/add-block.sh breadcrumbs collection
 ```
 
 The script will:
