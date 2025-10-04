@@ -30,7 +30,7 @@ This section provides information about living with a chronic condition and the 
 Meet the individuals who helped establish this initiative and continue to inspire our community.
 
 +---------------------------------------+--------------------------------------+
-| **Cards-members**                                                            |
+| **Carousel-founders**                                                        |
 +---------------------------------------+--------------------------------------+
 | ![Member 1](/images/member-1.jpg)    | ### Sarah Johnson                    |
 |                                      |                                      |
