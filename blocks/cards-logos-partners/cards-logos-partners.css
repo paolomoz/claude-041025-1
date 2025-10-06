@@ -46,7 +46,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  flex: 0 1 auto;
+  flex: 0 1 165px;
+  max-width: 180px;
 }
 
 /* Logo items */
@@ -55,9 +56,8 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  max-width: 180px;
   width: 100%;
-  flex: 0 1 auto;
+  height: 100%;
 }
 
 .cards-logos-partners-item a {
