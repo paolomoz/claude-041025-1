@@ -9,10 +9,8 @@
   padding: 60px 40px;
 }
 
-/* Heading styling - target h2 before the block wrapper */
-.cards-logos-partners-wrapper > div:first-child h2,
-h2 + .cards-logos-partners-wrapper h2,
-.cards-logos-partners-wrapper h2 {
+/* Heading styling - target h2 in default-content-wrapper before block wrapper */
+.default-content-wrapper:has(+ .cards-logos-partners-wrapper) h2 {
   color: #00a0d2;
   font-style: italic;
   font-size: 36px;
@@ -22,9 +20,7 @@ h2 + .cards-logos-partners-wrapper h2,
 }
 
 /* Cyan underline under heading */
-.cards-logos-partners-wrapper > div:first-child h2::after,
-h2 + .cards-logos-partners-wrapper h2::after,
-.cards-logos-partners-wrapper h2::after {
+.default-content-wrapper:has(+ .cards-logos-partners-wrapper) h2::after {
   content: '';
   display: block;
   width: 100%;
@@ -84,7 +80,7 @@ h2 + .cards-logos-partners-wrapper h2::after,
     padding: 40px 24px;
   }
 
-  .cards-logos-partners-wrapper h2 {
+  .default-content-wrapper:has(+ .cards-logos-partners-wrapper) h2 {
     font-size: 28px;
   }
 
@@ -102,7 +98,7 @@ h2 + .cards-logos-partners-wrapper h2::after,
     padding: 30px 16px;
   }
 
-  .cards-logos-partners-wrapper h2 {
+  .default-content-wrapper:has(+ .cards-logos-partners-wrapper) h2 {
     font-size: 24px;
   }
 

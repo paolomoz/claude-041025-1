@@ -26,10 +26,8 @@
   background-size: 600px 600px;
 }
 
-/* Heading - target h2 before the block wrapper */
-.carousel-team-founding-wrapper > div:first-child h2,
-h2 + .carousel-team-founding-wrapper h2,
-.carousel-team-founding-wrapper h2 {
+/* Heading - target h2 in default-content-wrapper before block wrapper */
+.default-content-wrapper:has(+ .carousel-team-founding-wrapper) h2 {
   color: #00a0d2;
   font-style: italic;
   font-size: 40px;
@@ -178,7 +176,7 @@ h2 + .carousel-team-founding-wrapper h2,
     padding: 40px 24px;
   }
 
-  .carousel-team-founding-wrapper h2 {
+  .default-content-wrapper:has(+ .carousel-team-founding-wrapper) h2 {
     font-size: 32px;
     margin-bottom: 30px;
   }
@@ -199,7 +197,7 @@ h2 + .carousel-team-founding-wrapper h2,
     padding: 30px 16px;
   }
 
-  .carousel-team-founding-wrapper h2 {
+  .default-content-wrapper:has(+ .carousel-team-founding-wrapper) h2 {
     font-size: 28px;
     margin-bottom: 24px;
   }
