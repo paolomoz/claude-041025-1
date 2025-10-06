@@ -1,0 +1,116 @@
+/**
+ * Cards Logos Partners Block
+ * Exact design match for Story Half Told partner logos section
+ */
+
+/* Container */
+.cards-logos-partners {
+  background-color: #f5f5f5;
+  padding: 60px 40px;
+}
+
+/* Heading styling - target h2 before the block wrapper */
+.cards-logos-partners-wrapper > div:first-child h2,
+h2 + .cards-logos-partners-wrapper h2,
+.cards-logos-partners-wrapper h2 {
+  color: #00a0d2;
+  font-style: italic;
+  font-size: 36px;
+  text-align: center;
+  margin: 0 0 16px 0;
+  font-weight: 400;
+}
+
+/* Cyan underline under heading */
+.cards-logos-partners-wrapper > div:first-child h2::after,
+h2 + .cards-logos-partners-wrapper h2::after,
+.cards-logos-partners-wrapper h2::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #00a0d2;
+  margin-top: 16px;
+  margin-bottom: 40px;
+}
+
+/* Logo grid */
+.cards-logos-partners > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 40px 56px; /* vertical, horizontal */
+}
+
+.cards-logos-partners > ul > li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Logo items */
+.cards-logos-partners-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards-logos-partners-item a {
+  display: block;
+  width: 100%;
+  max-width: 180px;
+  min-width: 120px;
+  transition: opacity 0.3s ease;
+}
+
+.cards-logos-partners-item a:hover {
+  opacity: 0.8;
+}
+
+.cards-logos-partners-item picture,
+.cards-logos-partners-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Responsive adjustments */
+@media (width < 900px) {
+  .cards-logos-partners {
+    padding: 40px 24px;
+  }
+
+  .cards-logos-partners-wrapper h2 {
+    font-size: 28px;
+  }
+
+  .cards-logos-partners > ul {
+    gap: 30px 40px;
+  }
+
+  .cards-logos-partners-item a {
+    max-width: 140px;
+  }
+}
+
+@media (width < 600px) {
+  .cards-logos-partners {
+    padding: 30px 16px;
+  }
+
+  .cards-logos-partners-wrapper h2 {
+    font-size: 24px;
+  }
+
+  .cards-logos-partners > ul {
+    gap: 24px 30px;
+  }
+
+  .cards-logos-partners-item a {
+    max-width: 120px;
+  }
+}
