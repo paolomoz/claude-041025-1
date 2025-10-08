@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code - Interactive Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 20px;
+      height: calc(100vh - 40px);
+    }
+
+    .sidebar {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 16px;
+      color: #2d3748;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .scenario-list {
+      list-style: none;
+    }
+
+    .scenario-item {
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      color: #4a5568;
+      border: 1px solid transparent;
+    }
+
+    .scenario-item:hover {
+      background: #f7fafc;
+      border-color: #667eea;
+    }
+
+    .scenario-item.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+    }
+
+    .scenario-item .scenario-icon {
+      margin-right: 8px;
+    }
+
+    .chat-panel {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chat-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .chat-header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      background: #f8f9fa;
+    }
+
+    .message {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .message-label {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-label {
+      color: #667eea;
+    }
+
+    .assistant-label {
+      color: #764ba2;
+    }
+
+    .message-content {
+      padding: 16px 20px;
+      border-radius: 12px;
+      line-height: 1.6;
+      max-width: 85%;
+    }
+
+    .user .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .assistant .message-content {
+      background: white;
+      color: #2d3748;
+      align-self: flex-start;
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .typing-indicator {
+      display: none;
+      padding: 16px 20px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      border-bottom-left-radius: 4px;
+      max-width: 100px;
+      align-self: flex-start;
+    }
+
+    .typing-indicator.active {
+      display: flex;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      background: #cbd5e0;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    .success-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-left: 4px solid #22c55e;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 12px 0;
+    }
+
+    .success-box strong {
+      color: #16a34a;
+      display: block;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .file-list, .block-list {
+      background: rgba(0, 0, 0, 0.02);
+      padding: 12px;
+      border-radius: 6px;
+      margin: 8px 0;
+    }
+
+    .file-list strong, .block-list strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #4a5568;
+    }
+
+    .message-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .message-content li {
+      margin-bottom: 8px;
+    }
+
+    .message-content code {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+    }
+
+    .message-content pre {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 12px 0;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+    }
+
+    .screenshot-preview {
+      margin: 16px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .screenshot-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .controls {
+      padding: 20px 30px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .capabilities-highlight {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .capability-card {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .capability-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .capability-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #2d3748;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <!-- Sidebar with scenarios -->
+    <div class="sidebar">
+      <h2>📋 Demo Scenarios</h2>
+      <ul class="scenario-list">
+        <li class="scenario-item active" data-scenario="bangkok-import">
+          <span class="scenario-icon">🏦</span>
+          Bangkok Bank Import
+        </li>
+        <li class="scenario-item" data-scenario="block-generation">
+          <span class="scenario-icon">🧩</span>
+          Block Generation
+        </li>
+        <li class="scenario-item" data-scenario="troubleshooting">
+          <span class="scenario-icon">🔧</span>
+          Troubleshooting
+        </li>
+        <li class="scenario-item" data-scenario="capabilities">
+          <span class="scenario-icon">⚡</span>
+          Key Capabilities
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main chat panel -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <h1>Claude Code - Interactive Demo</h1>
+        <p id="scenario-description">Automated web content migration to Adobe Edge Delivery Services</p>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <!-- Messages will be inserted here by JavaScript -->
+      </div>
+
+      <div class="typing-indicator" id="typing-indicator">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="btn-restart">↺ Restart Scenario</button>
+        <button class="btn btn-primary" id="btn-next">Next Step →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Scenario data
+    const scenarios = {
+      'bangkok-import': {
+        title: 'Bangkok Bank Homepage Import',
+        description: 'Automated web content migration to Adobe Edge Delivery Services',
+        steps: [
+          {
+            type: 'user',
+            content: 'Import this single page https://www.bangkokbank.com/ upload to DA, generate blocks of needed but don\'t work on reproducing the design. do not commit anything in git'
+          },
+          {
+            type: 'assistant',
+            content: `<p>I'll help you import the Bangkok Bank homepage, upload it to DA, and generate the necessary blocks without reproducing the design or committing to git.</p>
+              <p>Let me start by navigating to the page and capturing its content.</p>
+              <p>Creating a todo list to track this workflow:</p>
+              <ul>
+                <li>✓ Extract HTML body content</li>
+                <li>→ Analyze page structure</li>
+                <li>○ Create markdown with EDS blocks</li>
+                <li>○ Convert to HTML</li>
+                <li>○ Upload to DA</li>
+              </ul>`
+          },
+          {
+            type: 'assistant',
+            content: `<p><strong>Page Analysis Complete:</strong></p>
+              <p>Successfully navigated to <code>https://www.bangkokbank.com/</code></p>
+              <p>Identified key sections:</p>
+              <ul>
+                <li>Hero banner carousel (7 slides)</li>
+                <li>Promotions section (11 items)</li>
+                <li>Rates & News (currency, deposits, loans, funds)</li>
+                <li>Tips & Insights carousel (5 items)</li>
+                <li>Quick access links (6 items)</li>
+                <li>Business banking cross-banner</li>
+                <li>Footer (5 column groups)</li>
+              </ul>
+              <p>Now generating EDS blocks...</p>`
+          },
+          {
+            type: 'assistant',
+            content: `<div class="success-box">
+                <strong>✅ Task Completed Successfully!</strong>
+                <p>I've successfully imported the Bangkok Bank homepage and uploaded it to DA.</p>
+
+                <div class="file-list">
+                  <strong>📁 Files Created:</strong>
+                  <ul>
+                    <li><code>bangkokbank-homepage.png</code> - Full-page screenshot</li>
+                    <li><code>bangkokbank-content.md</code> - Markdown with EDS blocks</li>
+                    <li><code>bangkokbank-content.html</code> - Converted HTML</li>
+                  </ul>
+                </div>
+
+                <div class="block-list">
+                  <strong>🧩 Blocks Generated:</strong>
+                  <ul>
+                    <li><strong>Carousel blocks</strong> - Hero banners and promotional sliders</li>
+                    <li><strong>Cards blocks</strong> - Rates/news section and quick access</li>
+                    <li><strong>Hero block</strong> - Business banking cross-banner</li>
+                  </ul>
+                </div>
+
+                <div class="file-list">
+                  <strong>☁️ DA Upload:</strong>
+                  <ul>
+                    <li>URL: <code>admin.da.live/source/paolomoz/claude-041025-1/bangkokbank-com/index.html</code></li>
+                    <li>Status: 201 (Created)</li>
+                  </ul>
+                </div>
+
+                <p><strong>Note:</strong> As requested, no git commits were made. All files remain in your working directory.</p>
+              </div>`
+          }
+        ]
+      },
+      'block-generation': {
+        title: 'Automated Block Generation',
+        description: 'Generate reusable EDS blocks from existing web content',
+        steps: [
+          {
+            type: 'user',
+            content: 'Can you explain how the block generation works?'
+          },
+          {
+            type: 'assistant',
+            content: `<p><strong>Block Generation Workflow:</strong></p>
+              <p>Claude Code analyzes web pages and automatically generates appropriate EDS blocks:</p>
+
+              <div class="capabilities-highlight">
+                <div class="capability-card">
+                  <div class="capability-icon">🔍</div>
+                  <div class="capability-title">Visual Analysis</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">🏗️</div>
+                  <div class="capability-title">Structure Detection</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">🎨</div>
+                  <div class="capability-title">Block Mapping</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">✨</div>
+                  <div class="capability-title">Code Generation</div>
+                </div>
+              </div>
+
+              <p><strong>Supported Block Types:</strong></p>
+              <ul>
+                <li><strong>Hero</strong> - Large banners with CTAs</li>
+                <li><strong>Carousel</strong> - Image/content sliders</li>
+                <li><strong>Cards</strong> - Grid layouts with images and text</li>
+                <li><strong>Columns</strong> - Side-by-side content</li>
+                <li><strong>Accordion</strong> - Collapsible sections</li>
+                <li><strong>Tabs</strong> - Tabbed content areas</li>
+              </ul>`
+          }
+        ]
+      },
+      'troubleshooting': {
+        title: 'Intelligent Troubleshooting',
+        description: 'Automated debugging and problem resolution',
+        steps: [
+          {
+            type: 'user',
+            content: 'The images are not loading on my page, showing "about:error"'
+          },
+          {
+            type: 'assistant',
+            content: `<p><strong>Analyzing image loading issue...</strong></p>
+              <p>I'll check several common causes:</p>
+              <ol>
+                <li>Verifying images exist in git repository</li>
+                <li>Checking CDN accessibility</li>
+                <li>Inspecting block implementation</li>
+                <li>Reviewing path resolution</li>
+              </ol>`
+          },
+          {
+            type: 'assistant',
+            content: `<p><strong>Issue Identified:</strong></p>
+              <p>The block is missing the <code>createOptimizedPicture()</code> call.</p>
+
+              <p><strong>Solution Applied:</strong></p>
+              <pre>import { createOptimizedPicture } from '../../scripts/aem.js';
+
+export default function decorate(block) {
+  // ... block logic ...
+
+  // Process images AFTER DOM restructuring
+  block.querySelectorAll('picture > img').forEach((img) => {
+    const newPicture = createOptimizedPicture(
+      img.src, img.alt, false, [{ width: '750' }]
+    );
+    img.closest('picture').replaceWith(newPicture);
+  });
+}</pre>
+
+              <div class="success-box">
+                <strong>✅ Fixed!</strong>
+                <p>Images are now loading correctly. The block now properly optimizes images for EDS.</p>
+              </div>`
+          }
+        ]
+      },
+      'capabilities': {
+        title: 'Key Capabilities Overview',
+        description: 'What Claude Code can do for your EDS projects',
+        steps: [
+          {
+            type: 'assistant',
+            content: `<h3>🚀 Core Capabilities</h3>
+
+              <div class="capabilities-highlight">
+                <div class="capability-card">
+                  <div class="capability-icon">🌐</div>
+                  <div class="capability-title">Web Scraping</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">🧩</div>
+                  <div class="capability-title">Block Generation</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">📝</div>
+                  <div class="capability-title">Content Migration</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">☁️</div>
+                  <div class="capability-title">DA Integration</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">🔧</div>
+                  <div class="capability-title">Debugging</div>
+                </div>
+                <div class="capability-card">
+                  <div class="capability-icon">⚡</div>
+                  <div class="capability-title">Automation</div>
+                </div>
+              </div>
+
+              <p><strong>1. Automated Content Migration</strong></p>
+              <ul>
+                <li>Extract content from any website</li>
+                <li>Generate EDS-compatible markdown</li>
+                <li>Upload directly to Document Authoring</li>
+                <li>Preserve structure and formatting</li>
+              </ul>
+
+              <p><strong>2. Intelligent Block Generation</strong></p>
+              <ul>
+                <li>Analyze page layouts visually</li>
+                <li>Map to appropriate EDS blocks</li>
+                <li>Generate CSS and JavaScript</li>
+                <li>Follow best practices automatically</li>
+              </ul>
+
+              <p><strong>3. Development Workflow</strong></p>
+              <ul>
+                <li>Create and modify blocks</li>
+                <li>Debug rendering issues</li>
+                <li>Optimize images automatically</li>
+                <li>Manage git operations</li>
+              </ul>`
+          }
+        ]
+      }
+    };
+
+    // State management
+    let currentScenario = 'bangkok-import';
+    let currentStep = 0;
+
+    // DOM elements
+    const chatMessages = document.getElementById('chat-messages');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const btnNext = document.getElementById('btn-next');
+    const btnRestart = document.getElementById('btn-restart');
+    const scenarioDescription = document.getElementById('scenario-description');
+
+    // Initialize
+    function init() {
+      loadScenario(currentScenario);
+      attachEventListeners();
+    }
+
+    function attachEventListeners() {
+      // Scenario selection
+      document.querySelectorAll('.scenario-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          const scenario = e.currentTarget.dataset.scenario;
+          selectScenario(scenario);
+        });
+      });
+
+      // Controls
+      btnNext.addEventListener('click', nextStep);
+      btnRestart.addEventListener('click', restartScenario);
+    }
+
+    function selectScenario(scenario) {
+      currentScenario = scenario;
+      currentStep = 0;
+
+      // Update active state
+      document.querySelectorAll('.scenario-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.scenario === scenario) {
+          item.classList.add('active');
+        }
+      });
+
+      loadScenario(scenario);
+    }
+
+    function loadScenario(scenario) {
+      const data = scenarios[scenario];
+      scenarioDescription.textContent = data.description;
+      chatMessages.innerHTML = '';
+      currentStep = 0;
+      updateControls();
+    }
+
+    function nextStep() {
+      const data = scenarios[currentScenario];
+      if (currentStep >= data.steps.length) return;
+
+      const step = data.steps[currentStep];
+
+      // Show typing indicator
+      typingIndicator.classList.add('active');
+
+      setTimeout(() => {
+        typingIndicator.classList.remove('active');
+        addMessage(step.type, step.content);
+        currentStep++;
+        updateControls();
+
+        // Auto-scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    function addMessage(type, content) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+
+      const label = type === 'user' ? '👤 User' : '🤖 Claude Code';
+      const labelClass = type === 'user' ? 'user-label' : 'assistant-label';
+
+      messageDiv.innerHTML = `
+        <div class="message-label ${labelClass}">${label}</div>
+        <div class="message-content">${content}</div>
+      `;
+
+      chatMessages.appendChild(messageDiv);
+    }
+
+    function restartScenario() {
+      loadScenario(currentScenario);
+    }
+
+    function updateControls() {
+      const data = scenarios[currentScenario];
+      if (currentStep >= data.steps.length) {
+        btnNext.disabled = true;
+        btnNext.textContent = '✓ Scenario Complete';
+      } else {
+        btnNext.disabled = false;
+        btnNext.textContent = 'Next Step →';
+      }
+    }
+
+    // Start the demo
+    init();
+  </script>
+</body>
+</html>
