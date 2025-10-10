@@ -1,0 +1,82 @@
+{
+  "total": 10,
+  "offset": 0,
+  "limit": 10,
+  "data": [
+    {
+      "Type": "text",
+      "Name": "firstName",
+      "Label": "First Name",
+      "Placeholder": "",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "text",
+      "Name": "lastName",
+      "Label": "Last Name",
+      "Placeholder": "",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "email",
+      "Name": "email",
+      "Label": "Email Address",
+      "Placeholder": "",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "select",
+      "Name": "mbcExperience",
+      "Label": "Experience with MBC",
+      "Placeholder": "Please select...",
+      "Mandatory": "x",
+      "Options": "I am living with metastatic breast cancer, I am a caregiver/family member of someone living with metastatic breast cancer, I am a healthcare professional, Other",
+      "Description": ""
+    },
+    {
+      "Type": "text-area",
+      "Name": "story",
+      "Label": "Your Story",
+      "Placeholder": "Share your experience...",
+      "Mandatory": "x",
+      "Description": "Please do not include specific medical details such as treatment names, dosages, or detailed medical histories."
+    },
+    {
+      "Type": "file",
+      "Name": "fileUpload",
+      "Label": "Upload Media (Optional)",
+      "Placeholder": "",
+      "Mandatory": "",
+      "Description": "Upload photos, videos, or documents (max 30MB). Accepted formats: jpg, png, gif, pdf, mp4, mov"
+    },
+    {
+      "Type": "checkbox",
+      "Name": "consentContent",
+      "Label": "I certify that I own the rights to the content I am submitting, or have obtained necessary permissions.",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "checkbox",
+      "Name": "consentUse",
+      "Label": "I grant Pfizer permission to use my story and any submitted media for awareness purposes across various platforms worldwide.",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "checkbox",
+      "Name": "consentEdit",
+      "Label": "I understand that Pfizer may edit my submission for clarity, length, and consistency with the Story Half Told mission.",
+      "Mandatory": "x",
+      "Description": ""
+    },
+    {
+      "Type": "submit",
+      "Label": "Share Your Story",
+      "Name": "submit"
+    }
+  ]
+}
